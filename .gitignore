@@ -1,0 +1,63 @@
+# Environment Variables
+.env
+!.env.example
+
+# Terragrunt
+.terragrunt-cache/
+live/**/*.tf
+
+# Terraform/OpenTofu
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+tofu.tfstate
+tofu.tfstate.*
+
+# Talos
+*.talosconfig
+talosconfig
+controlplane.yaml
+worker.yaml
+machineconfig.json
+
+# Kubernetes
+*.kubeconfig
+kubeconfig
+.kube/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# OS
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backup files
+*.bak
+*.backup
+
+# Local development
+local/
+dev/
+
+# Secrets (additional patterns)
+*secrets*
+*private*
+*.key
+*.crt
+*.pem
+*.p12

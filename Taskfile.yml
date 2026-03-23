@@ -1,0 +1,86 @@
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  tg:init:
+    desc: "Initialize Terragrunt for an environment (ENV=stage|prod)"
+    cmds:
+      - terragrunt init
+    dir: "live/{{.ENV}}"
+    vars:
+      ENV: stage
+
+  tg:plan:
+    desc: "Plan Terragrunt deployment for an environment"
+    cmds:
+      - terragrunt run --all plan
+    dir: "live/{{.ENV}}"
+    vars:
+      ENV: stage
+
+  tg:apply:
+    desc: "Apply Terragrunt deployment for an environment"
+    cmds:
+      - terragrunt run --all apply
+    dir: "live/{{.ENV}}"
+    vars:
+      ENV: stage
+
+  tg:destroy:
+    desc: "Destroy Terragrunt deployment for an environment"
+    cmds:
+      - terragrunt run --all destroy
+    dir: "live/{{.ENV}}"
+    vars:
+      ENV: stage
+
+  # Single unit operations (for debugging/testing)
+  tg:init-unit:
+    desc: "Initialize single unit (ENV=stage|prod, UNIT=networking|cluster)"
+    cmds:
+      - terragrunt init
+    dir: "live/{{.ENV}}/{{.UNIT}}"
+    vars:
+      ENV: stage
+      UNIT: networking
+
+  tg:plan-unit:
+    desc: "Plan single unit"
+    cmds:
+      - terragrunt plan
+    dir: "live/{{.ENV}}/{{.UNIT}}"
+    vars:
+      ENV: stage
+      UNIT: networking
+
+  tg:apply-unit:
+    desc: "Apply single unit"
+    cmds:
+      - terragrunt apply
+    dir: "live/{{.ENV}}/{{.UNIT}}"
+    vars:
+      ENV: stage
+      UNIT: networking
+
+  tg:destroy-unit:
+    desc: "Destroy single unit"
+    cmds:
+      - terragrunt destroy
+    dir: "live/{{.ENV}}/{{.UNIT}}"
+    vars:
+      ENV: stage
+      UNIT: networking
+
+  clean:
+    desc: Clean up generated files
+    cmds:
+      - find live -type d -name ".terragrunt-cache" -exec rm -rf {} +
+      - find live -type d -name ".terraform" -exec rm -rf {} +
+      - rm -f kubeconfig-*
+      - echo "Cleaned up generated files"
