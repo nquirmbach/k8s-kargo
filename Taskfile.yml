@@ -77,6 +77,14 @@ tasks:
       ENV: stage
       UNIT: networking
 
+  tg:output:
+    desc: "Show outputs for environment or unit"
+    cmds:
+      - terragrunt output --all
+    dir: "live/{{.ENV}}"
+    vars:
+      ENV: stage
+
   clean:
     desc: Clean up generated files
     cmds:

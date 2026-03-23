@@ -137,10 +137,5 @@ talosctl kubeconfig --nodes <controlplane-ip> --endpoints <api-endpoint>
 
 ## Hinweise
 
-- Alle `.tf` Dateien in `live/` werden automatisch generiert (nicht einchecken)
 - Remote State ist in Hetzner Object Storage konfiguriert
 - Keine Load Balancer - Floating IPs für API Server
-
-## Status
-
-**Phase 2 Abgeschlossen** - Infrastructure as Code steht bereit für Deployment
