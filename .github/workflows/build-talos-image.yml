@@ -1,0 +1,67 @@
+name: Build and Upload TalOS Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      talos_version:
+        description: 'TalOS version to build'
+        required: true
+        default: 'v1.12.6'
+        type: string
+  push:
+    paths:
+      - '.github/workflows/build-talos-image.yml'
+
+env:
+  TALOS_VERSION: ${{ inputs.talos_version || 'v1.12.6' }}
+  ARCH: amd64
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install hcloud-upload-image
+        run: |
+          go install github.com/apricote/hcloud-upload-image@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Download TalOS image
+        run: |
+          echo "Downloading TalOS ${TALOS_VERSION} image..."
+          wget -O talos-${TALOS_VERSION}-${ARCH}.raw.xz \
+            "https://factory.talos.dev/image/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba/${TALOS_VERSION}/hcloud-${ARCH}.raw.xz"
+
+      - name: Upload image to Hetzner Cloud
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+        run: |
+          echo "Uploading image to Hetzner Cloud..."
+          hcloud-upload-image upload \
+            --image-path talos-${TALOS_VERSION}-${ARCH}.raw.xz \
+            --architecture x86 \
+            --compression xz \
+            --description "TalOS ${TALOS_VERSION} ${ARCH}" \
+            --label os=talos \
+            --label version=${TALOS_VERSION} \
+            --label arch=${ARCH}
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f talos-${TALOS_VERSION}-${ARCH}.raw.xz
+
+      - name: Summary
+        run: |
+          echo "✅ TalOS ${TALOS_VERSION} image uploaded successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Image name: \`talos-${TALOS_VERSION}-${ARCH}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "You can now use this image in your Terraform configuration." >> $GITHUB_STEP_SUMMARY

@@ -7,6 +7,7 @@ Diese Datei enthält wichtige Informationen für AI Agents, die an diesem Reposi
 **Kargo auf Hetzner Cloud mit Talos OS**
 
 Ein Kubernetes Test-Setup für Kargo (Continuous Promotion Orchestration) mit:
+
 - 2 Environments: Stage und Prod
 - Jeweils 1 Control Plane + 1 Worker Node
 - Talos OS als immutable Kubernetes Platform
@@ -35,6 +36,7 @@ live/              # Terragrunt Konfigurationen
 ## Wichtige Konventionen
 
 ### 1. Datei-Typen
+
 - **`.tf`** - OpenTofu Module Code (in `catalog/modules/`)
 - **`.hcl`** - Terragrunt Konfigurationen (in `live/`)
 - **`.tf` generiert** - Von Terragrunt generiert (nicht manuell editieren)
@@ -43,10 +45,11 @@ live/              # Terragrunt Konfigurationen
 
 **Networking** hat keine Dependencies.
 **Cluster** hat Dependency auf Networking:
+
 ```hcl
 dependency "networking" {
   config_path = "../networking"
-  
+
   mock_outputs = {
     network_id      = 12345678
     subnet_id       = 12345678
@@ -58,6 +61,7 @@ dependency "networking" {
 ```
 
 ### 3. Versions
+
 - OpenTofu: >= 1.8.0
 - Terragrunt: ~> 0.99.4 (aktuell installiert)
 - Talos Provider: ~> 0.7.0
@@ -92,6 +96,7 @@ terragrunt run -- run-all apply
 ## Technische Details
 
 ### Networking Module Outputs
+
 - `network_id` - Hetzner Network ID
 - `subnet_id` - Subnet ID
 - `firewall_id` - Firewall ID
@@ -100,6 +105,7 @@ terragrunt run -- run-all apply
 - `ingress_floating_ip` - IP für Ingress
 
 ### Talos Cluster Module Inputs
+
 - `environment` - stage/prod
 - `cluster_name` - z.B. "kargo-stage"
 - `kubernetes_version` - v1.32.13
@@ -110,6 +116,7 @@ terragrunt run -- run-all apply
 - `api_floating_ip_id`, `api_floating_ip` - von Networking
 
 ### Kosten
+
 - Stage: 2x CPX11 = ~€8/Monat
 - Prod: 2x CPX21 = ~€16/Monat
 - Total: ~€24/Monat
@@ -117,14 +124,17 @@ terragrunt run -- run-all apply
 ## Häufige Fehler
 
 ### "Unknown variable dependency"
+
 **Ursache:** `dependency` Block fehlt oder ist falsch
 **Lösung:** `dependency` mit `mock_outputs` hinzufügen
 
 ### "no Floating IP found"
+
 **Ursache:** `data.hcloud_floating_ip` sucht nach nicht existierender IP
 **Lösung:** Floating IP ID statt IP verwenden, oder `mock_outputs` prüfen
 
 ### "duplicate variable declaration"
+
 **Ursache:** Variablen in `main.tf` und `variables.tf` definiert
 **Lösung:** Variablen nur in `variables.tf` definieren
 
@@ -134,7 +144,7 @@ terragrunt run -- run-all apply
 2. **Keine `terragrunt.hcl` in `catalog/`** - Nur `.tf` Dateien
 3. **Immer `mock_outputs` verwenden** - Für Dependencies
 4. **Taskfile nutzen** - Für konsistente Commands
-5. **Environment-Variable `HETZNER_API_TOKEN`** - Muss gesetzt sein
+5. **Environment-Variable `HCLOUD_TOKEN`** - Muss gesetzt sein
 
 ## Ressourcen
 

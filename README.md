@@ -66,7 +66,7 @@ cp .env.example .env
 `.env` bearbeiten:
 
 ```
-HETZNER_API_TOKEN=your_hetzner_api_token
+HCLOUD_TOKEN=your_HCLOUD_TOKEN
 AWS_ACCESS_KEY_ID=your_s3_access_key
 AWS_SECRET_ACCESS_KEY=your_s3_secret_key
 ```

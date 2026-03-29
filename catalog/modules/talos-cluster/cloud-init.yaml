@@ -1,0 +1,21 @@
+#!/bin/bash
+# Cloud-init script to install Talos OS on Hetzner Cloud Ubuntu instances
+
+set -e
+
+# Install required packages
+apt-get update
+apt-get install -y wget xz-utils
+
+# Download Talos OS image
+cd /tmp
+wget "https://factory.talos.dev/image/376567988ed37072ad06a5d9380dfaa6b5bd4a4476aa6f0d654f2cd8763dc2d5/v1.12.6/hcloud-amd64.raw.xz" -O talos.raw.xz
+
+# Extract the image
+unxz talos.raw.xz
+
+# Write TalOS to disk (overwrite Ubuntu)
+dd if=talos.raw of=/dev/sda bs=1M status=progress
+
+# Reboot into TalOS
+reboot

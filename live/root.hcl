@@ -36,5 +36,5 @@ EOF
 }
 
 inputs = {
-  hcloud_token = get_env("HETZNER_API_TOKEN")
+  hcloud_token = get_env("HCLOUD_TOKEN")
 }

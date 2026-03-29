@@ -68,7 +68,7 @@ data "talos_machine_configuration" "worker" {
 resource "hcloud_server" "controlplane" {
   name        = "${var.cluster_name}-controlplane"
   server_type = var.control_plane_node_type
-  image       = "ubuntu-22.04"
+  image       = "talos-v1.12.6-amd64"
   location    = var.location
 
   network {
@@ -91,7 +91,7 @@ resource "hcloud_server" "controlplane" {
 resource "hcloud_server" "worker" {
   name        = "${var.cluster_name}-worker"
   server_type = var.worker_node_type
-  image       = "ubuntu-22.04"
+  image       = "talos-v1.12.6-amd64"
   location    = var.location
 
   network {
@@ -106,7 +106,6 @@ resource "hcloud_server" "worker" {
   labels = {
     environment = var.environment
     cluster     = var.cluster_name
-    role        = "worker"
   }
 }
 

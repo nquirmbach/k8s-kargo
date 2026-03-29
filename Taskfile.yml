@@ -92,3 +92,19 @@ tasks:
       - find live -type d -name ".terraform" -exec rm -rf {} +
       - rm -f kubeconfig-*
       - echo "Cleaned up generated files"
+
+  talos:build-image:
+    desc: "Build TalOS image for Hetzner Cloud using Packer"
+    cmds:
+      - cd catalog/modules/talos-cluster/_packer && ./create.sh
+    preconditions:
+      - sh: command -v packer >/dev/null 2>&1
+        msg: "Packer is not installed. Please install Packer first: brew install packer"
+
+  talos:upload-image:
+    desc: "Upload TalOS image to Hetzner Cloud"
+    cmds:
+      - chmod +x scripts/upload-talos-image.sh
+      - ./scripts/upload-talos-image.sh {{.VERSION}}
+    vars:
+      VERSION: v1.12.6
