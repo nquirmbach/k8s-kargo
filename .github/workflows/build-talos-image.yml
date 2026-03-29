@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       talos_version:
-        description: 'TalOS version to build'
+        description: "TalOS version to build"
         required: true
-        default: 'v1.12.6'
+        default: "v1.12.6"
         type: string
   push:
     paths:
-      - '.github/workflows/build-talos-image.yml'
+      - ".github/workflows/build-talos-image.yml"
 
 env:
   TALOS_VERSION: ${{ inputs.talos_version || 'v1.12.6' }}
@@ -26,7 +26,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: "1.23"
 
       - name: Install hcloud-upload-image
         run: |
@@ -48,10 +48,7 @@ jobs:
             --image-path talos-${TALOS_VERSION}-${ARCH}.raw.xz \
             --architecture x86 \
             --compression xz \
-            --description "TalOS ${TALOS_VERSION} ${ARCH}" \
-            --label os=talos \
-            --label version=${TALOS_VERSION} \
-            --label arch=${ARCH}
+            --description "TalOS ${TALOS_VERSION} ${ARCH}"
 
       - name: Cleanup
         if: always()
