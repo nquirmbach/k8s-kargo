@@ -48,7 +48,8 @@ jobs:
             --image-path talos-${TALOS_VERSION}-${ARCH}.raw.xz \
             --architecture x86 \
             --compression xz \
-            --description "TalOS ${TALOS_VERSION} ${ARCH}"
+            --description "TalOS ${TALOS_VERSION} ${ARCH}" \
+            --server-location nbg1
 
       - name: Cleanup
         if: always()
