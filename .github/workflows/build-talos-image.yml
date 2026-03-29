@@ -49,7 +49,7 @@ jobs:
             --architecture x86 \
             --compression xz \
             --description "TalOS ${TALOS_VERSION} ${ARCH}" \
-            --server-location nbg1
+            --location nbg1
 
       - name: Cleanup
         if: always()
